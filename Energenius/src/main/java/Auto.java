@@ -4,17 +4,17 @@ public class Auto {
     double akkuStand;
     double maxAkku;
     String id;
-    Fahrplan fahrplan;
+    StehPlan stehPlan;
     Date aktuelleZeit;
     boolean autoIstDa;
     StehPeriode aktuelleStehPeriode;
 
 
     
-    public Auto(double maxAkku, String id, Fahrplan fahrplan) {
+    public Auto(double maxAkku, String id, StehPlan stehPlan) {
         this.maxAkku = maxAkku;
         this.id = id;
-        this.fahrplan = fahrplan;
+        this.stehPlan = stehPlan;
         this.akkuStand = 0;
     }
 
@@ -23,9 +23,9 @@ public class Auto {
     }
 
 
-    public void handleAktuelleZeit(Date aktuelleZeit) {
+    public void handleAktuelleZeit(Date aktuelleZeit) throws Exception {
         this.aktuelleZeit = aktuelleZeit;
-        StehPeriode aktuelleStehPeriode = fahrplan.getCurrentStehperiode(aktuelleZeit);
+        StehPeriode aktuelleStehPeriode = stehPlan.getCurrentStehperiode(aktuelleZeit);
         if (aktuelleStehPeriode == null && autoIstDa) {
            autoFaehrtAb();
         } else {
@@ -35,7 +35,10 @@ public class Auto {
         }
     }
 
-    void autoFaehrtAb(){
+    void autoFaehrtAb() throws Exception {
+        if (akkuStand < aktuelleStehPeriode.getBenoetigteLadung()) {
+            throw new Exception ("Akkustand im Auto zu niedrig für geplante fahrt!");
+        }
         autoIstDa = false;
     }
 

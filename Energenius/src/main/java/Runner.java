@@ -18,7 +18,7 @@ public class Runner {
 
 
 
-    Fahrplan makeFahrplan(){
+    StehPlan makeFahrplan(){
         ArrayList<StehPeriode> fahrten = new ArrayList<>();
 
         fahrten.add(
@@ -36,7 +36,7 @@ public class Runner {
                 )
         );
 
-        return new Fahrplan(fahrten);
+        return new StehPlan(fahrten);
     }
 
 }
