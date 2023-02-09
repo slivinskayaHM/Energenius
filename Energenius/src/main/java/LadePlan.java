@@ -12,7 +12,6 @@ public class LadePlan {
 
     public LadePlan(Auto auto, TreeMap<Date, Double> prognose) {
         this.auto = auto;
-        this.noetigeTicks = berechneNoetigeTicks(auto.getBenoetigteLadung() - auto.akkuStand);
         this.prognose = prognose;
     }
 
@@ -49,6 +48,7 @@ public class LadePlan {
     }
 
     public boolean shouldCharge(Date uhrzeit, double gegenwaertigeStromzeugung) {
+        noetigeTicks = berechneNoetigeTicks(auto.getBenoetigteLadung() - auto.akkuStand);
         if (berechneVerfuegbareTicks(auto.aktuelleStehPeriode, uhrzeit) <= noetigeTicks + 5) {
             return true;
         }
