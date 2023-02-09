@@ -3,7 +3,7 @@ import java.util.*;
 public class Runner {
     ArrayList<StehPeriode> fahrten;
     TreeMap<Date, Double> prognoseDaten;
-    static TreeMap<Date, Double> realDaten = InitData.realDaten;
+    static TreeMap<Date, Double> realDaten = InitData.makeRealDaten();
     public static void main(String[] args) {
         //Todo Auto, Output und Solaranalage initialisieren
         for (Map.Entry<Date, Double> entry :  realDaten.entrySet()) {

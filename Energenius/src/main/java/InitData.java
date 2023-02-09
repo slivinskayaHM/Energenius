@@ -3,7 +3,7 @@ import java.util.Date;
 import java.util.TreeMap;
 
 public class InitData {
-    public static TreeMap<Date, Double> MakeRealDaten {
+    public static TreeMap<Date, Double> makeRealDaten() {
         TreeMap<Date, Double> realDaten = new TreeMap();
         realDaten.put(new Date(2023,02,13,2,30), 0.0);
         realDaten.put(new Date(2023,02,13,2,35), 0.0);
@@ -263,11 +263,7 @@ public class InitData {
         realDaten.put(new Date(2023,02,13,23,45), 0.0);
         realDaten.put(new Date(2023,02,13,23,50), 0.0);
 
-
-
-
-
-        return new StehPlan(fahrten);
+        return realDaten;
     }
 }
 
