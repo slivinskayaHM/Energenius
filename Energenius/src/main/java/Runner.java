@@ -1,13 +1,17 @@
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
+import java.util.*;
 
 public class Runner {
     ArrayList<StehPeriode> fahrten;
-    HashMap<Date, Double> Prognosedaten;
-    HashMap<Date, Double> Realdaten;
+    TreeMap<Date, Double> prognoseDaten;
+    static TreeMap<Date, Double> realDaten = InitData.realDaten;
     public static void main(String[] args) {
+        //Todo Auto, Output und Solaranalage initialisieren
+        for (Map.Entry<Date, Double> entry :  realDaten.entrySet()) {
+            //Todo handleTime von Auto, Output und Solaranale auslößen
+            // handleTime();
+        }
 
+        //Todo output.Data ausgeben
     }
 
 

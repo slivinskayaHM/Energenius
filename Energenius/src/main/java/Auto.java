@@ -22,6 +22,7 @@ public class Auto {
 
     public void charge(double watt) {
         akkuStand += watt;
+        System.out.println("Auto wurde geladen --> neuer Akkustand: " + akkuStand);
     }
 
 
@@ -35,6 +36,7 @@ public class Auto {
                 autoKommtAn();
             }
         }
+
     }
 
     void autoFaehrtAb() throws Exception {
@@ -43,11 +45,13 @@ public class Auto {
         }
         home.remomveLadePlan(this);
         autoIstDa = false;
+        System.out.println("Auto ist abgefahren");
     }
 
     void autoKommtAn(){
         autoIstDa = true;
         home.makeNewLadeplan(this);
+        System.out.println("Auto ist angekommen");
     }
 
     // -------------------- setter + getter -------------------------------------

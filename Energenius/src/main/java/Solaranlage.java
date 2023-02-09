@@ -60,6 +60,7 @@ public class Solaranlage {
         for (Auto auto : ladeSchlange) {
             stromAusLeitung = LADUNGS_BIT - stromVonAnlage;
             auto.charge(LADUNGS_BIT);
+
         }
 
     }
