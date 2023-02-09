@@ -9,14 +9,13 @@ public class Runner {
     static ArrayList<Auto> autos = new ArrayList<>();
 
     public static void main(String[] args) throws Exception {
-        //Todo Auto, Output und Solaranalage initialisieren
+        //Todo Output initialisieren
         home = new Solaranlage(prognoseDaten);
 
-        autos.add(new Auto(60000, "Auto 1", makeStehPlan(), home));
+        autos.add(InitData.makeAuto1(home));
+        autos.add(InitData.makeAuto2(home));
 
         for (Map.Entry<Date, Double> entry :  realDaten.entrySet()) {
-            //Todo handleTime von Auto, Output und Solaranale auslößen
-            // handleTime();
             Date aktuelleZeit = entry.getKey();
             double aktuelleStromerzeugung = entry.getValue();
 
@@ -34,7 +33,6 @@ public class Runner {
 
     static StehPlan makeStehPlan(){
         ArrayList<StehPeriode> fahrten = new ArrayList<>();
-
         fahrten.add(
                 new StehPeriode(
                 new Date(2023, 1, 13, 14, 40),
@@ -49,13 +47,12 @@ public class Runner {
                         21000
                 )
         );
-
         return new StehPlan(fahrten);
     }
 
     private static TreeMap<Date, Double> rechneAufTicksRunter(TreeMap<Date, Double> stuendlicheDaten) {
         TreeMap<Date, Double> returnMap = new TreeMap<>();
-        for(Map.Entry<java.util.Date, java.lang.Double> entry : stuendlicheDaten.entrySet()) {
+        for(Map.Entry<Date, Double> entry : stuendlicheDaten.entrySet()) {
             Date key = entry.getKey();
             Double value = entry.getValue();
 
@@ -63,14 +60,14 @@ public class Runner {
             int addedTimeInMs = addMinutes * 60 * 1000;
             long newTime = key.getTime();
 
-            for (int i = 0; i <= 11; i++) {
-                returnMap.put(new java.util.Date(newTime), value);
-                System.out.println(key + " " + value + "added");
+            for (int i = 0; i <= 10; i++) {
                 newTime += addedTimeInMs;
+                Date newDate = new Date(newTime);
+                returnMap.put(newDate, value);
+                System.out.println( newDate + " / " + value + " added");
             }
-            System.out.println(newTime);
         }
-        return stuendlicheDaten;
+        return returnMap;
     }
 
 }

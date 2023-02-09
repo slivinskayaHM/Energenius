@@ -611,7 +611,52 @@ public class InitData {
         return prognoseDaten;
     }
 
+    public static Auto makeAuto1(Solaranlage home) {
+        return new Auto(60000, "Auto 1", makeStehPlan1(), home);
+    }
 
+    static StehPlan makeStehPlan1(){
+        ArrayList<StehPeriode> fahrten = new ArrayList<>();
+        fahrten.add(
+                new StehPeriode(
+                        new Date(2023, 1, 13, 14, 40),
+                        new Date(2023, 1,14,6,0),
+                        25000
+                )
+        );
+        fahrten.add(
+                new StehPeriode(
+                        new Date(2023, 1, 14, 12, 45),
+                        new Date(2023, 1,15,6,10),
+                        21000
+                )
+        );
+        return new StehPlan(fahrten);
+    }
+
+    public static Auto makeAuto2(Solaranlage home) {
+        return new Auto(80000, "Auto 2", makeStehPlan2(), home);
+
+    }
+
+    private static StehPlan makeStehPlan2() {
+        ArrayList<StehPeriode> fahrten = new ArrayList<>();
+        fahrten.add(
+                new StehPeriode(
+                        new Date(2023,1,13,13,0),
+                        new Date(2023,1,14,17,0),
+                        13000
+                )
+        );
+        fahrten.add(
+                new StehPeriode(
+                        new Date(2023,1,14,21,0),
+                        new Date(2023,1,15,14,11),
+                        21000
+                )
+        );
+        return new StehPlan(fahrten);
+    }
 
 
 }

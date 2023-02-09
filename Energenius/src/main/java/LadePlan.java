@@ -3,9 +3,12 @@ import java.util.Date;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-public class LadePlan {
+public class LadePlan implements Comparable<LadePlan> {
     Auto auto;
     int noetigeTicks;
+    int verfuegbareTicks;
+    int verbliebeneAuswahl;
+    boolean forceCharge = false;
 
     SortedMap<Date, Double> prognose;
 
@@ -13,7 +16,7 @@ public class LadePlan {
         this.auto = auto;
         this.prognose = prognose;
 
-        System.out.println("Prognosedaten: " + prognose);
+        // System.out.println("Prognosedaten: " + prognose);
     }
 
     public double getRequestedCharge() {
@@ -53,14 +56,16 @@ public class LadePlan {
 
     public boolean shouldCharge(Date uhrzeit, double gegenwaertigeStromzeugung) {
         noetigeTicks = berechneNoetigeTicks(auto.getBenoetigteLadung());
-
+        verfuegbareTicks = berechneVerfuegbareTicks(auto.aktuelleStehPeriode, uhrzeit);
+        verbliebeneAuswahl = verfuegbareTicks - noetigeTicks;
         //System.out.println("---Verfügbare Ticks sind " + berechneVerfuegbareTicks(auto.aktuelleStehPeriode, uhrzeit) + " nötige ticks sind " + noetigeTicks);
 
         if (noetigeTicks < 0 ) {
             return false;
         }
-        if (berechneVerfuegbareTicks(auto.aktuelleStehPeriode, uhrzeit) <= noetigeTicks + 5) {
-            System.out.println("Auto wird geladen um genügend strom zur verfügung zu haben");
+        if (verfuegbareTicks <= noetigeTicks + 5) {
+            System.out.println( auto.id + ": Auto wird geladen um genügend strom zur verfügung zu haben");
+            forceCharge = true;
             return true;
         }
         double gewuenschteLadung = getRequestedCharge();
@@ -68,10 +73,25 @@ public class LadePlan {
         // System.out.println("Gewünschte ladeung ist " + gewuenschteLadung + " gegenwärtige stromproduktion ist " + gegenwaertigeStromzeugung);
 
         if (gegenwaertigeStromzeugung >= gewuenschteLadung) {
-            System.out.println("Gewünschte ladeung ist " + gewuenschteLadung + " gegenwärtige stromproduktion ist " + gegenwaertigeStromzeugung + "\n----> Lade Auto");
+            System.out.println(auto.id + ": Gegenwärtige Stromproduktion (" + gegenwaertigeStromzeugung + "): entspricht gewünschtem Output (" + gewuenschteLadung + ")");
             return true;
         }
         return false;
 
+    }
+
+    public double getAusweichMoeglichkeiten() {
+        return verbliebeneAuswahl;
+    }
+
+    @Override
+    public int compareTo(LadePlan other) {
+        if (this.verbliebeneAuswahl < other.verbliebeneAuswahl) {
+            return -1;
+        } else if (this.verbliebeneAuswahl > other.verbliebeneAuswahl) {
+            return 1;
+        } else {
+            return 0;
+        }
     }
 }

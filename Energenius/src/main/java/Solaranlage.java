@@ -3,67 +3,68 @@ import java.util.*;
 public class Solaranlage {
     static final double LADUNGS_BIT = 4000 / 12;
 
-    double gegenwärtigeStromzeugung;
-
     TreeMap<Date, Double> prognoseDaten;
     //ArrayList<Auto> autos = new ArrayList<>();
     ArrayList<LadePlan> ladePlaene = new ArrayList<LadePlan>();
-    ArrayList<Auto> ladeSchlange = new ArrayList<>();
+    ArrayList<LadePlan> ladeSchlange = new ArrayList<>();
+
 
     double stromVonAnlage = 0;
     double stromAusLeitung = 0;
+    Date currentDate;
+
+    boolean didNotShowCurrentDate = true;
 
     public Solaranlage(TreeMap<Date, Double> prognoseDaten) {
         this.prognoseDaten = prognoseDaten;
     }
 
-//    private TreeMap<Date, Double> rechneAufTicksRunter(TreeMap<Date, Double> prognoseDaten) {
-//        for(Map.Entry<Date,Double> entry : prognoseDaten.entrySet()) {
-//            Date key = entry.getKey();
-//            Double value = entry.getValue();
-//
-//            int addMinutes = 5;
-//            int addedTimeInMs = addMinutes * 60 * 1000;
-//            long newTime = key.getTime() + addedTimeInMs;
-//
-//            for (int i = 0; i <= 11; i++) {
-//                prognoseDaten.put(new Date(newTime), value);
-//
-//                System.out.println(key + " " + value + "added");
-//            }
-//        }
-//        return prognoseDaten;
-//    }
 
 
     public void handleAktuelleZeit(Date zeit, double gegenwaertigeStromzeugung) {
-
         stromVonAnlage = gegenwaertigeStromzeugung;
+        currentDate = zeit;
+
+        if (didNotShowCurrentDate) {
+            System.out.println("----------------------------  " + currentDate + "  ----------------------------");
+            didNotShowCurrentDate = false;
+        }
 
         for (LadePlan ladePlan : ladePlaene) {
-            if (ladePlan.auto.autoIstDa && shouldCharge(zeit, gegenwaertigeStromzeugung, ladePlan)) {
-                ladeSchlange.add(ladePlan.auto);
+            if (ladePlan.auto.autoIstDa && shouldCharge(currentDate, gegenwaertigeStromzeugung, ladePlan)) {
+                ladeSchlange.add(ladePlan);
             }
         }
-        handleLadeSchlange();
+        if (ladeSchlange.size() > 0) {
+            handleLadeSchlange();
+        }
+        beendeZeitEinheit();
+    }
+
+    private void beendeZeitEinheit() {
         ladeSchlange.clear();
+        didNotShowCurrentDate = true;
     }
 
     private void handleLadeSchlange() {
-        if (ladeSchlange.size() == 0) {
-            return;
-        }
-//        if (ladeSchlange.size() == 2) {
-//            for (Auto auto : ladeSchlange) {
-//               priorisiereLadung();
-//            }
-//        }
-        for (Auto auto : ladeSchlange) {
-            stromAusLeitung = LADUNGS_BIT - stromVonAnlage;
-            auto.charge(LADUNGS_BIT);
+        Collections.sort(ladeSchlange);
+        charge(ladeSchlange.get(0).auto);
+        ladeSchlange.remove(0);
 
+        if (ladeSchlange.size() != 0) {
+            System.out.println(" Auto mit höchster Priorität wurde geladen. Suche Autos mit Priorität 'forceCharge'");
+            for (LadePlan ladePlan : ladeSchlange) {
+                if (ladePlan.forceCharge) {
+                    charge(ladePlan.auto);
+                }
+            }
         }
+    }
 
+    private void charge(Auto auto) {
+        auto.charge(LADUNGS_BIT);
+        stromAusLeitung += LADUNGS_BIT - stromVonAnlage / 12;
+        stromVonAnlage = 0;
     }
 
     boolean shouldCharge(Date uhrzeit, double gegenwaertigeStromzeugung, LadePlan ladePlan) {

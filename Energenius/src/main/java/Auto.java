@@ -22,7 +22,7 @@ public class Auto {
 
     public void charge(double watt) {
         akkuStand += watt;
-        System.out.println("Auto wurde geladen --> neuer Akkustand: " + akkuStand);
+        System.out.println( this.id + " wurde geladen --> neuer Akkustand: " + akkuStand + "; benötigt für nächste Fahrt: " + aktuelleStehPeriode.getBenoetigteLadung());
     }
 
 
@@ -32,9 +32,9 @@ public class Auto {
         StehPeriode aktuelleStehPeriode = stehPlan.getCurrentStehperiode(aktuelleZeit);
         if (aktuelleStehPeriode == null) {
             if (autoIstDa) {
+                System.out.println(this.id + " fährt ab!");
                 autoFaehrtAb();
                 autoIstDa = false;
-                System.out.println("Es ist " + aktuelleZeit + "\nAuto ist abgefahren, wird ankommen mit " + akkuStand);
             }
         } else {
             if (this.aktuelleStehPeriode == null) {
@@ -42,7 +42,7 @@ public class Auto {
             }
             if (!autoIstDa){
                 autoKommtAn();
-                System.out.println("Es ist " + aktuelleZeit + "\nAuto ist angekommen");
+                System.out.println(this.id + " ist angekommen. Verbliebene Ladung: " + akkuStand);
             }
             autoIstDa = true;
         }
