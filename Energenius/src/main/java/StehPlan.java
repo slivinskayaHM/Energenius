@@ -22,10 +22,6 @@ public class StehPlan {
         return null;
     };
 
-    public int gibNötigeDurchschnittsladung (){
-
-    }
-
     //Todo: Use some of these methods to update car Stehperiode
     Date getAbwesenheit() {
         return new Date();

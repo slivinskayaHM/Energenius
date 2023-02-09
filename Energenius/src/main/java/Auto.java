@@ -8,14 +8,16 @@ public class Auto {
     Date aktuelleZeit;
     boolean autoIstDa;
     StehPeriode aktuelleStehPeriode;
+    Solaranlage home;
 
 
     
-    public Auto(double maxAkku, String id, StehPlan stehPlan) {
+    public Auto(double maxAkku, String id, StehPlan stehPlan, Solaranlage home) {
         this.maxAkku = maxAkku;
         this.id = id;
         this.stehPlan = stehPlan;
         this.akkuStand = 0;
+        this.home = home;
     }
 
     public void charge(double watt) {
@@ -44,6 +46,7 @@ public class Auto {
 
     void autoKommtAn(){
         autoIstDa = true;
+        home.makeNewLadeplan(this);
     }
 
     // -------------------- setter + getter -------------------------------------

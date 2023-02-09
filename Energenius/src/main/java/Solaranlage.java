@@ -1,15 +1,21 @@
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.TreeMap;
 
 public class Solaranlage {
     static final double LADUNGS_BIT = 4000 / 12;
 
     double gegenwärtigeStromzeugung;
 
-    HashMap<Date, Double> prognoseDaten;
+    TreeMap<Date, Double> prognoseDaten;
     ArrayList<Auto> autos = new ArrayList<>();
+    ArrayList<LadePlan> ladePlaene = new ArrayList<LadePlan>();
     ArrayList<Auto> ladeSchlange = new ArrayList<>();
+
+    public void makeNewLadeplan(Auto auto) {
+        ladePlaene.add(new LadePlan(auto));
+    }
 
     public void handleAktuelleZeit(Date zeit, double gegenwärtigeStromzeugung) {
 
