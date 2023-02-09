@@ -14,26 +14,26 @@ public class Solaranlage {
     double stromAusLeitung = 0;
 
     public Solaranlage(TreeMap<Date, Double> prognoseDaten) {
-        this.prognoseDaten = rechneAufTicksRunter(prognoseDaten);
+        this.prognoseDaten = prognoseDaten;
     }
 
-    private TreeMap<Date, Double> rechneAufTicksRunter(TreeMap<Date, Double> prognoseDaten) {
-        for(Map.Entry<Date,Double> entry : prognoseDaten.entrySet()) {
-            Date key = entry.getKey();
-            Double value = entry.getValue();
-
-            int addMinutes = 5;
-            int addedTimeInMs = addMinutes * 60 * 1000;
-            long newTime = key.getTime() + addedTimeInMs;
-
-            for (int i = 0; i <= 11; i++) {
-                prognoseDaten.put(new Date(newTime), value);
-
-                System.out.println(key + " " + value + "added");
-            }
-        }
-        return prognoseDaten;
-    }
+//    private TreeMap<Date, Double> rechneAufTicksRunter(TreeMap<Date, Double> prognoseDaten) {
+//        for(Map.Entry<Date,Double> entry : prognoseDaten.entrySet()) {
+//            Date key = entry.getKey();
+//            Double value = entry.getValue();
+//
+//            int addMinutes = 5;
+//            int addedTimeInMs = addMinutes * 60 * 1000;
+//            long newTime = key.getTime() + addedTimeInMs;
+//
+//            for (int i = 0; i <= 11; i++) {
+//                prognoseDaten.put(new Date(newTime), value);
+//
+//                System.out.println(key + " " + value + "added");
+//            }
+//        }
+//        return prognoseDaten;
+//    }
 
 
     public void handleAktuelleZeit(Date zeit, double gegenwaertigeStromzeugung) {
@@ -46,6 +46,7 @@ public class Solaranlage {
             }
         }
         handleLadeSchlange();
+        ladeSchlange.clear();
     }
 
     private void handleLadeSchlange() {
@@ -71,13 +72,14 @@ public class Solaranlage {
 
     public void makeNewLadeplan(Auto auto) {
         StehPeriode currentStehperiode = auto.aktuelleStehPeriode;
-        TreeMap<Date, Double> prognoseDatenFuerStehperiode = selectPrognoseZeitraum(currentStehperiode.getAnkunft(), currentStehperiode.getAbfahrt());
+        SortedMap<Date, Double> prognoseDatenFuerStehperiode = selectPrognoseZeitraum(currentStehperiode.getAnkunft(), currentStehperiode.getAbfahrt());
         ladePlaene.add(new LadePlan(auto, prognoseDatenFuerStehperiode));
     }
 
-    private TreeMap<Date, Double> selectPrognoseZeitraum(Date ankunft, Date abfahrt) {
+    private SortedMap<Date, Double> selectPrognoseZeitraum(Date ankunft, Date abfahrt) {
         // Na ob das mal klappt :3
-        return (TreeMap<Date, Double>) prognoseDaten.subMap(ankunft, abfahrt);
+
+        return prognoseDaten.subMap(ankunft, abfahrt);
     }
 
     public void remomveLadePlan(Auto auto) throws Exception {

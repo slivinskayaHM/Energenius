@@ -3,8 +3,7 @@ import java.util.Date;
 import java.util.HashMap;
 
 public class StehPlan {
-    ArrayList<StehPeriode> stehPerioden;
-    HashMap<Date, Double> prognoseDaten;
+    ArrayList<StehPeriode> stehPerioden ;
 
     public StehPlan(ArrayList<StehPeriode> stehPerioden) {
         this.stehPerioden = stehPerioden;
@@ -12,9 +11,14 @@ public class StehPlan {
 
 
     public StehPeriode getCurrentStehperiode(Date aktuelleZeit) {
+        // System.out.println("Checking if Auto is in Stehperiode at " + aktuelleZeit);
+
         for (StehPeriode stehPeriode : stehPerioden) {
-            if (stehPeriode.getAbfahrt().before(aktuelleZeit)) {
-                if (stehPeriode.getAnkunft().after(aktuelleZeit)) {
+
+            if (stehPeriode.getAbfahrt().after(aktuelleZeit)) {
+
+                if (stehPeriode.getAnkunft().before(aktuelleZeit)) {
+
                     return stehPeriode;
                 }
             }

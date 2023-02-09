@@ -1,18 +1,19 @@
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.SortedMap;
 import java.util.TreeMap;
 
 public class LadePlan {
-    public static boolean forceCharge;
     Auto auto;
-    int vefuegbareTicks;
     int noetigeTicks;
 
-    TreeMap<Date, Double> prognose;
+    SortedMap<Date, Double> prognose;
 
-    public LadePlan(Auto auto, TreeMap<Date, Double> prognose) {
+    public LadePlan(Auto auto, SortedMap<Date, Double> prognose) {
         this.auto = auto;
         this.prognose = prognose;
+
+        System.out.println("Prognosedaten: " + prognose);
     }
 
     public double getRequestedCharge() {
@@ -21,11 +22,11 @@ public class LadePlan {
     }
 
     private double ermittleDurchschnittsWert(ArrayList<Double> values) {
-        int kumulierteWerte = 0;
+        double kumulierteWerte = 0;
         for (double wert : values) {
             kumulierteWerte += wert;
         }
-        return (double) kumulierteWerte / values.size();
+        return kumulierteWerte / values.size();
     }
 
 
@@ -39,19 +40,38 @@ public class LadePlan {
 
     private int berechneVerfuegbareTicks(StehPeriode aktuelleStehPeriode, Date aktuelleZeit) {
         double ladeZeit = berechneZeit(aktuelleStehPeriode.getAbfahrt(), aktuelleZeit);
+
+        // System.out.println("Aktuelle Zeit ist: " + aktuelleZeit + " nächste abfahrt ist " + aktuelleStehPeriode.getAbfahrt() + " \nVerfügbare Minuten sind " + Math.floor(ladeZeit / (60 * 1000)));
+
         double fiveMinutesInMillis  = 5 * 60 * 1000;
         return (int) Math.floor(ladeZeit / fiveMinutesInMillis);
     }
 
     private static double berechneZeit(Date abfahrt, Date aktuelleZeit) {
-        return abfahrt.getTime()  - aktuelleZeit.getTime();
+        return abfahrt.getTime() - aktuelleZeit.getTime();
     }
 
     public boolean shouldCharge(Date uhrzeit, double gegenwaertigeStromzeugung) {
-        noetigeTicks = berechneNoetigeTicks(auto.getBenoetigteLadung() - auto.akkuStand);
+        noetigeTicks = berechneNoetigeTicks(auto.getBenoetigteLadung());
+
+        //System.out.println("---Verfügbare Ticks sind " + berechneVerfuegbareTicks(auto.aktuelleStehPeriode, uhrzeit) + " nötige ticks sind " + noetigeTicks);
+
+        if (noetigeTicks < 0 ) {
+            return false;
+        }
         if (berechneVerfuegbareTicks(auto.aktuelleStehPeriode, uhrzeit) <= noetigeTicks + 5) {
+            System.out.println("Auto wird geladen um genügend strom zur verfügung zu haben");
             return true;
         }
-        return gegenwaertigeStromzeugung <= getRequestedCharge() - 100;
+        double gewuenschteLadung = getRequestedCharge();
+
+        // System.out.println("Gewünschte ladeung ist " + gewuenschteLadung + " gegenwärtige stromproduktion ist " + gegenwaertigeStromzeugung);
+
+        if (gegenwaertigeStromzeugung >= gewuenschteLadung) {
+            System.out.println("Gewünschte ladeung ist " + gewuenschteLadung + " gegenwärtige stromproduktion ist " + gegenwaertigeStromzeugung + "\n----> Lade Auto");
+            return true;
+        }
+        return false;
+
     }
 }
