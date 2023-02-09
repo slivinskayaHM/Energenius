@@ -41,6 +41,7 @@ public class Auto {
         if (akkuStand < aktuelleStehPeriode.getBenoetigteLadung()) {
             throw new Exception ("Akkustand im Auto zu niedrig für geplante fahrt!");
         }
+        home.remomveLadePlan(this);
         autoIstDa = false;
     }
 
