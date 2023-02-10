@@ -12,18 +12,22 @@ public class Solaranlage {
     double stromVonAnlage = 0;
     double stromAusLeitung = 0;
     Date currentDate;
+    Output report;
 
     boolean didNotShowCurrentDate = true;
 
-    public Solaranlage(TreeMap<Date, Double> prognoseDaten) {
+    public Solaranlage(TreeMap<Date, Double> prognoseDaten, Output report) {
         this.prognoseDaten = prognoseDaten;
+        this.report = report;
     }
 
 
 
     public void handleAktuelleZeit(Date zeit, double gegenwaertigeStromzeugung) {
         stromVonAnlage = gegenwaertigeStromzeugung;
+        report.addProducedOutput(gegenwaertigeStromzeugung / 12);
         currentDate = zeit;
+
 
         if (didNotShowCurrentDate) {
             System.out.println("----------------------------  " + currentDate + "  ----------------------------");
@@ -44,6 +48,8 @@ public class Solaranlage {
     private void beendeZeitEinheit() {
         ladeSchlange.clear();
         didNotShowCurrentDate = true;
+        stromVonAnlage = 0;
+        stromAusLeitung = 0;
     }
 
     private void handleLadeSchlange() {
@@ -64,7 +70,14 @@ public class Solaranlage {
     private void charge(Auto auto) {
         auto.charge(LADUNGS_BIT);
         stromAusLeitung += LADUNGS_BIT - stromVonAnlage / 12;
-        stromVonAnlage = 0;
+        if (LADUNGS_BIT >= stromVonAnlage / 12) {
+            report.addUsedElectrictyFromPanel(stromVonAnlage / 12);
+            stromVonAnlage = 0;
+        } else {
+            report.addUsedElectrictyFromPanel(LADUNGS_BIT);
+            stromVonAnlage -= LADUNGS_BIT;
+        }
+        report.addUsedElectrictyFromPowrLine(stromAusLeitung);
     }
 
     boolean shouldCharge(Date uhrzeit, double gegenwaertigeStromzeugung, LadePlan ladePlan) {

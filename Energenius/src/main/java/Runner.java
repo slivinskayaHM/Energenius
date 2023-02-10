@@ -7,11 +7,12 @@ public class Runner {
 
     static Solaranlage home;
     static ArrayList<Auto> autos = new ArrayList<>();
+    static Output report;
 
     public static void main(String[] args) throws Exception {
-        //Todo Output initialisieren
-        home = new Solaranlage(prognoseDaten);
 
+        report = new Output();
+        home = new Solaranlage(prognoseDaten, report);
         autos.add(InitData.makeAuto1(home));
         autos.add(InitData.makeAuto2(home));
 
@@ -26,7 +27,7 @@ public class Runner {
         }
 
         System.out.println("------------------------- fertig ------------------------");
-        //Todo output.Data ausgeben
+        report.generateOutput();
     }
 
 

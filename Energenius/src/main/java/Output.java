@@ -1,10 +1,12 @@
 public class Output {
 
 
+    public Output() {
+    }
     // Werden von Solaranalage beeinflusst
-    double genutzertStromVonAnlage;
-    double genutzertStromAusLeitung;
-    double gesammtGenutzerStrom;
+    double genutzertStromVonAnlage = 0;
+    double genutzertStromAusLeitung = 0;
+    double gesammtGenutzerStrom = 0;
 
     // Wird von Runner beeinflusst
     double produzierterStromVonAnlage = 0;
@@ -24,16 +26,21 @@ public class Output {
      *
      *
      **/
-    public void handleTime(double produzierterStrom){
+    public void addProducedOutput(double produzierterStrom){
+        System.out.println("--> Produzeierter Strom: " + produzierterStromVonAnlage + " ist bereits da, hinzugefügt wird: " + produzierterStrom);
         produzierterStromVonAnlage += produzierterStrom;
     };
-    public void usedElectrictyFromPanel(double genutzterStrom) {
+    public void addUsedElectrictyFromPanel(double genutzterStrom) {
+        System.out.println("--> Genutzerter Strom aus Anlage: " + genutzertStromVonAnlage + " ist bereits da, hinzugefügt wird: " + genutzterStrom);
         genutzertStromVonAnlage += genutzterStrom;
     }
-    public void usedElectrictyFromPowrLine(double genutzterStrom) {
+    public void addUsedElectrictyFromPowrLine(double genutzterStrom) {
+        System.out.println("--> Genutzerter Strom aus Leitung: " + genutzertStromAusLeitung + " ist bereits da, hinzugefügt wird: " + genutzterStrom);
         genutzertStromAusLeitung += genutzterStrom;
     }
     private double geldausGabeOhneSolarpanele(){
+        gesammtGenutzerStrom = genutzertStromVonAnlage + genutzertStromAusLeitung;
+
         return (gesammtGenutzerStrom / 1000) * 0.3;
     }
     private double gesamtGenutzerStromInEuro() {
@@ -43,6 +50,8 @@ public class Output {
      *  Methode die am Ende des runners aufgerufen wird und eine Ausgabe mit allen relevanten Daten erzeugt
      **/
     public void generateOutput(){
+
+
         System.out.println("+--------------------------------------------------------+");
         System.out.println("                                                          ");
         System.out.println("          Herzlich Willkommen bei Energenius!             ");
