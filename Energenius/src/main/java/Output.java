@@ -4,8 +4,8 @@ public class Output {
     public Output() {
     }
     // Werden von Solaranalage beeinflusst
-    double genutzertStromVonAnlage = 0;
-    double genutzertStromAusLeitung = 0;
+    static double genutzertStromVonAnlage = 0;
+    static double genutzertStromAusLeitung = 0;
     double gesammtGenutzerStrom = 0;
 
     // Wird von Runner beeinflusst
@@ -43,15 +43,13 @@ public class Output {
 
         return (gesammtGenutzerStrom / 1000) * 0.3;
     }
-    private double gesamtGenutzerStromInEuro() {
+    private static double gesamtGenutzerStromInEuro() {
         return ((genutzertStromVonAnlage/1000) * 0.07) +((genutzertStromAusLeitung/1000) * 0.3);
     }
     /**
      *  Methode die am Ende des runners aufgerufen wird und eine Ausgabe mit allen relevanten Daten erzeugt
      **/
     public void generateOutput(){
-
-
         System.out.println("+--------------------------------------------------------+");
         System.out.println("                                                          ");
         System.out.println("          Herzlich Willkommen bei Energenius!             ");
@@ -76,8 +74,13 @@ public class Output {
         System.out.println(" Nachts. :)");
         System.out.println(" Dadurch liegen Ihre Kosten durchschnittlich bei " + gesamtGenutzerStromInEuro() / 6 + " Euro");
         System.out.println(" pro Tag.");
+        System.out.println(" Somit sparen Sie sich Kosten in einer Höhe von " +prozentzahl()+ "%");
         System.out.println("+--------------------------------------------------------+");
     };
+
+    private static double prozentzahl() {
+        return (genutzertStromVonAnlage * 0.07 / gesamtGenutzerStromInEuro());
+    }
 
     public void setGenutzertStromVonAnlage(double genutzertStromVonAnlage) {
         this.genutzertStromVonAnlage = genutzertStromVonAnlage;
