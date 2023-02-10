@@ -100,7 +100,7 @@ public class Solaranlage {
         for (LadePlan ladePlan : ladePlaene) {
             if (ladePlan.auto.id == auto.id) {
                 ladePlaene.remove(ladePlan);
-                System.out.println("auto with id" +  auto.id + " has been removed");
+                System.out.println("Fahrzeug mit id " +  auto.id + " wurde entfernt");
                 return;
             }
         }
